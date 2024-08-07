@@ -11,7 +11,6 @@ RUN \
     apt-get install -y --no-install-recommends \
       wget \
       libgtk-3-bin \ ca-certificates \ libswt-webkit-gtk-4-jni \ vim \ xdg-utils \ libnss3-dev \
-      gnome-icon-theme* \ 
       thunar && \
   echo "**** installing OpenAudible ****" && \
     wget -q https://github.com/openaudible/openaudible/releases/download/v${OA_VERSION}/OpenAudible_${OA_VERSION}_x86_64.sh && \
