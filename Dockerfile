@@ -8,6 +8,8 @@ RUN \
   sed -i 's|</applications>|  <application title="OpenAudible" type="normal">\n    <maximized>no</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
   echo "**** update packages ****" && \
     apt-get update && \
+    apt-get dist-upgrade -y && \
+    apt-get install software-properties-common -y && \    
     apt-get install -y --no-install-recommends \
       wget \
       libgtk-3-bin \ ca-certificates \ libswt-webkit-gtk-4-jni \ vim \ xdg-utils \ libnss3-dev \
