@@ -9,8 +9,9 @@ RUN \
   echo "**** update packages ****" && \
     apt-get update && \
     apt-get dist-upgrade -y && \
-    apt-get install software-properties-common -y && \ 
-    apt-get install libgtk-3-bin \ ca-certificates \ libswt-webkit-gtk-4-jni \ vim \ xdg-utils \ libnss3-dev && \
+    apt-get install software-properties-common -y && \
+    apt-get install -y ca-certificates && \
+    apt-get install -y libswt-webkit-gtk-4-jni && \
     apt-get install -y --no-install-recommends \
       wget \
       thunar && \
