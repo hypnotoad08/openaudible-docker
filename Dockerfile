@@ -1,6 +1,6 @@
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 
-LABEL maintainer="lanjelin"
+LABEL maintainer="hypnotoad08"
 ENV TITLE=OpenAudible
 ENV OA_VERSION=4.4.2
 
