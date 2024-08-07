@@ -1,6 +1,6 @@
 services:
   openaudible:
-    image: ghcr.io/lanjelin/openaudible-docker:latest
+    image: ghcr.io/hypnotoad08/openaudible-docker:main
     container_name: openaudible
     environment:
       - PUID=1000
