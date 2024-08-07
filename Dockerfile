@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntu-xfce
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 
 LABEL maintainer="lanjelin"
 ENV TITLE=OpenAudible
