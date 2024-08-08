@@ -19,7 +19,7 @@ Some snippets to get you started.
 ```yaml
 services:
   openaudible:
-    image: ghcr.io/lanjelin/openaudible-docker:latest
+    image: ghcr.io/hypnotoad08/openaudible-docker:main
     container_name: openaudible
     environment:
       - PUID=1000
@@ -47,7 +47,7 @@ docker run -d \
   -p 3001:3001 \
   -v /path/to/config:/config \
   --restart unless-stopped \
-  ghcr.io/lanjelin/openaudible-docker:latest
+  ghcr.io/hypnotoad08/openaudible-docker:main
 ```
 
 Additional environment variables can be found [here](https://github.com/linuxserver/docker-baseimage-kasmvnc#options).
