@@ -28,8 +28,7 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy files from build context. Ensure there's a 'root' directory in the repo (relative path).
-COPY root/ /root/
+COPY /root /
 
 EXPOSE 3000 3001
 
