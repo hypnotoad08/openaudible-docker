@@ -46,8 +46,8 @@ jobs:
             exit 1
           fi
           
-          # Extract OA_VERSION from Dockerfile (handle quoted and unquoted values)
-          IMAGE_VERSION=$(grep 'OA_VERSION=' Dockerfile | sed -E 's/.*OA_VERSION=(["\x27]?)([^"\x27]+)\1.*/\2/')
+          # Extract OA_VERSION from Dockerfile (handle ARG or ENV with quoted and unquoted values)
+          IMAGE_VERSION=$(grep -E '^(ARG|ENV) OA_VERSION=' Dockerfile | head -1 | sed -E 's/.*OA_VERSION=(["\x27]?)([^"\x27]+)\1.*/\2/')
           
           if [ -z "${IMAGE_VERSION}" ]; then
             echo "**** Can't retrieve last pushed version, exiting ****"
@@ -63,7 +63,9 @@ jobs:
           ASSET_URL="https://github.com/openaudible/openaudible/releases/download/v${EXT_RELEASE}/OpenAudible_${EXT_RELEASE}_x86_64.sh"
           if curl -sfI "${ASSET_URL}" > /dev/null; then
             echo "**** New version ${EXT_RELEASE} found; old version was ${IMAGE_VERSION}. Triggering update. ****"
-            sed -i "s/OA_VERSION=${IMAGE_VERSION}/OA_VERSION=${EXT_RELEASE}/g" Dockerfile
+            # Update ARG OA_VERSION line specifically (handles both ARG and ENV formats)
+            sed -i "s/^\(ARG OA_VERSION=\)${IMAGE_VERSION}/\1${EXT_RELEASE}/" Dockerfile
+            sed -i "s/^\(ENV OA_VERSION=\)${IMAGE_VERSION}/\1${EXT_RELEASE}/" Dockerfile
             echo "update=true" >> "$GITHUB_OUTPUT"
             echo "tag=${EXT_RELEASE}" >> "$GITHUB_OUTPUT"
           else

@@ -1,29 +1,32 @@
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 
 LABEL maintainer="hypnotoad08"
-ENV TITLE=OpenAudible
-ENV OA_VERSION=4.6.3
+ARG OA_VERSION=4.6.3
+ENV TITLE="OpenAudible" \
+    OA_VERSION="${OA_VERSION}" \
+    DEBIAN_FRONTEND=noninteractive
 
-RUN \
-  sed -i 's|</applications>|  <application title="OpenAudible" type="normal">\n    <maximized>no</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
-  echo "**** update packages ****" && \
-    apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install software-properties-common -y && \
-    apt-get install -y ca-certificates && \
-    apt-get install -y libswt-webkit-gtk-4-jni && \
+# keep everything in a single RUN to reduce layers and ensure cleanup happens in the same layer
+RUN set -eux; \
+    # add OpenAudible to openbox menu
+    sed -i 's|</applications>|  <application title="OpenAudible" type="normal">\n    <maximized>no</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml; \
+    echo "**** update packages ****"; \
+    apt-get update; \
     apt-get install -y --no-install-recommends \
+      ca-certificates \
       wget \
-      thunar && \
-  echo "**** installing OpenAudible ****" && \
-    wget -q https://github.com/openaudible/openaudible/releases/download/v${OA_VERSION}/OpenAudible_${OA_VERSION}_x86_64.sh && \
-    sh ./OpenAudible_${OA_VERSION}_x86_64.sh -q && \
-    rm OpenAudible_${OA_VERSION}_x86_64.sh && \
-  echo "**** cleanup ****" && \
-    rm -rf \
-      /tmp/* \
-      /var/lib/apt/lists/* \
-      /var/tmp/*
+      thunar \
+      software-properties-common \
+      libswt-webkit-gtk-4-jni; \
+    echo "**** installing OpenAudible ${OA_VERSION} ****"; \
+    wget -q -O /tmp/OpenAudible_${OA_VERSION}_x86_64.sh "https://github.com/openaudible/openaudible/releases/download/v${OA_VERSION}/OpenAudible_${OA_VERSION}_x86_64.sh"; \
+    chmod +x /tmp/OpenAudible_${OA_VERSION}_x86_64.sh; \
+    /tmp/OpenAudible_${OA_VERSION}_x86_64.sh -q; \
+    rm -f /tmp/OpenAudible_${OA_VERSION}_x86_64.sh; \
+    echo "**** cleanup ****"; \
+    apt-get purge -y --auto-remove; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY /root /
 
