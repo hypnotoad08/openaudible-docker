@@ -13,31 +13,55 @@ on:
 jobs:
   do-stuff-pretty-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Check versions
         id: check
         env:
-          GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXT_RELEASE=$(curl --silent "https://api.github.com/repos/openaudible/openaudible/releases/latest" | grep '"tag_name":' |  sed -E 's/.*"v([^"]+)".*/\1/')
-          if [ -z "${EXT_RELEASE}" ]; then
+          # Fetch latest release tag with authentication
+          RELEASE_TAG=$(curl -sfH "Authorization: Bearer ${GITHUB_TOKEN}" \
+            "https://api.github.com/repos/openaudible/openaudible/releases/latest" | \
+            grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          
+          if [ -z "${RELEASE_TAG}" ]; then
             echo "**** Can't retrieve external release, exiting ****"
             exit 1
           fi
-          IMAGE_VERSION=$(cat Dockerfile | grep 'OA_VERSION=' | sed -E 's/.*=([^"]+).*/\1/');
+          
+          # Extract version number (handle with or without 'v' prefix)
+          EXT_RELEASE=$(echo "${RELEASE_TAG}" | sed -E 's/^v?(.+)/\1/')
+          
+          if [ -z "${EXT_RELEASE}" ]; then
+            echo "**** Can't parse release version, exiting ****"
+            exit 1
+          fi
+          
+          # Extract OA_VERSION from Dockerfile (handle quoted and unquoted values)
+          IMAGE_VERSION=$(grep 'OA_VERSION=' Dockerfile | sed -E 's/.*OA_VERSION=(["\x27]?)([^"\x27]+)\1.*/\2/')
+          
           if [ -z "${IMAGE_VERSION}" ]; then
             echo "**** Can't retrieve last pushed version, exiting ****"
             exit 1
           fi
+          
           if [ "${EXT_RELEASE}" == "${IMAGE_VERSION}" ]; then
             echo "**** Version ${EXT_RELEASE} already pushed, exiting ****"
             exit 0
           fi
-          if wget -q --method=HEAD https://github.com/openaudible/openaudible/releases/download/v${EXT_RELEASE}/OpenAudible_${EXT_RELEASE}_x86_64.sh; then
+          
+          # Validate upstream release asset URL exists
+          ASSET_URL="https://github.com/openaudible/openaudible/releases/download/v${EXT_RELEASE}/OpenAudible_${EXT_RELEASE}_x86_64.sh"
+          if curl -sfI "${ASSET_URL}" > /dev/null; then
             echo "**** New version ${EXT_RELEASE} found; old version was ${IMAGE_VERSION}. Triggering update. ****"
             sed -i "s/OA_VERSION=${IMAGE_VERSION}/OA_VERSION=${EXT_RELEASE}/g" Dockerfile
             echo "update=true" >> "$GITHUB_OUTPUT"
