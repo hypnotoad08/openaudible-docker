@@ -1,7 +1,7 @@
 FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 
 LABEL maintainer="hypnotoad08"
-ARG OA_VERSION=4.7.2
+ARG OA_VERSION=4.7.3
 ENV TITLE="OpenAudible" \
     OA_VERSION="${OA_VERSION}" \
     DEBIAN_FRONTEND=noninteractive
