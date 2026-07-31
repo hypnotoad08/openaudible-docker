@@ -16,7 +16,8 @@ RUN set -eux; \
       ca-certificates \
       wget \
       thunar \
-      libswt-webkit-gtk-4-jni; \
+      firefox-esr \
+      libwebkit2gtk-4.1-0; \
     echo "**** installing OpenAudible ${OA_VERSION} ****"; \
     wget -q -O /tmp/OpenAudible_${OA_VERSION}_x86_64.sh "https://github.com/openaudible/openaudible/releases/download/v${OA_VERSION}/OpenAudible_${OA_VERSION}_x86_64.sh"; \
     chmod +x /tmp/OpenAudible_${OA_VERSION}_x86_64.sh; \
