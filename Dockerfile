@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
+FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie
 
 LABEL maintainer="hypnotoad08"
 ARG OA_VERSION=4.8.7
@@ -16,7 +16,6 @@ RUN set -eux; \
       ca-certificates \
       wget \
       thunar \
-      software-properties-common \
       libswt-webkit-gtk-4-jni; \
     echo "**** installing OpenAudible ${OA_VERSION} ****"; \
     wget -q -O /tmp/OpenAudible_${OA_VERSION}_x86_64.sh "https://github.com/openaudible/openaudible/releases/download/v${OA_VERSION}/OpenAudible_${OA_VERSION}_x86_64.sh"; \
