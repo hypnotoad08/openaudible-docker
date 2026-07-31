@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
+FROM ghcr.io/linuxserver/baseimage-selkies:debianbookworm
 
 LABEL maintainer="hypnotoad08"
 ARG OA_VERSION=4.8.7
