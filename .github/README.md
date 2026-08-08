@@ -32,6 +32,8 @@ services:
       - "3001:3001" #https
     volumes:
       - /path/to/config:/config
+      # Optional: mount trusted certs for HTTPS. Directory must contain cert.pem and cert.key.
+      # - /path/to/certs:/config/ssl:ro
     restart: unless-stopped
 ```
 
@@ -50,8 +52,8 @@ docker run -d \
   ghcr.io/hypnotoad08/openaudible-docker:main
 ```
 
-For trusted HTTPS, mount a certificate and key at `/config/ssl/cert.pem` and
-`/config/ssl/cert.key`. Without those files, the base image generates a
+For trusted HTTPS, mount a certificate directory at `/config/ssl` containing
+`cert.pem` and `cert.key`. Without those files, the base image generates a
 self-signed certificate that browsers will warn about.
 
 Additional environment variables can be found [here](https://github.com/linuxserver/docker-baseimage-kasmvnc#options).

@@ -13,4 +13,6 @@ services:
       - "3001:3001" #https
     volumes:
       - /path/to/config:/config
+      # Optional: mount trusted certs for HTTPS. Directory must contain cert.pem and cert.key.
+      # - /path/to/certs:/config/ssl:ro
     restart: unless-stopped

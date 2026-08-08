@@ -41,6 +41,7 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY /root /
+RUN mkdir -p /config/ssl && chmod +x /etc/cont-init.d/10-openaudible-ssl-dir
 
 EXPOSE 3000
 
