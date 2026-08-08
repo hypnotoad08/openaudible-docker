@@ -8,7 +8,6 @@ Container built on [linuxserver/docker-baseimage/selkies](https://github.com/lin
 The application can be accessed at:
 
 * http://yourhost:3000/
-* https://yourhost:3001/
 
 ## Usage
 
@@ -29,7 +28,6 @@ services:
       - PASSWORD=a-safe-pw  # the internet without any other form of authentication
     ports:
       - "3000:3000" #http
-      - "3001:3001" #https
     volumes:
       - /path/to/config:/config
     restart: unless-stopped
@@ -44,7 +42,6 @@ docker run -d \
   -e PGID=1000 \
   -e TZ=Europe/Oslo \
   -p 3000:3000 \
-  -p 3001:3001 \
   -v /path/to/config:/config \
   --restart unless-stopped \
   ghcr.io/hypnotoad08/openaudible-docker:main
