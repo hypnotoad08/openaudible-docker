@@ -1,8 +1,23 @@
-ARG OA_VERSION=4.8.7
-FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie AS runtime
+FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie
 
-ARG OA_VERSION
-ENV DEBIAN_FRONTEND=noninteractive
+LABEL maintainer="hypnotoad08"
+ARG OA_VERSION=4.8.7
+ENV TITLE="OpenAudible" \
+    OA_VERSION="${OA_VERSION}" \
+    SELKIES_ENCODER=jpeg \
+    SELKIES_USE_CSS_SCALING=true \
+    SELKIES_UI_SIDEBAR_SHOW_APPS=false \
+    SELKIES_UI_SIDEBAR_SHOW_FILES=false \
+    SELKIES_UI_SIDEBAR_SHOW_SHARING=false \
+    SELKIES_UI_SIDEBAR_SHOW_GAMEPADS=false \
+    SELKIES_ENABLE_SHARING=false \
+    SELKIES_GAMEPAD_ENABLED=false \
+    SELKIES_MICROPHONE_ENABLED=false \
+    SELKIES_COMMAND_ENABLED=false \
+    SELKIES_FILE_TRANSFERS= \
+    DISABLE_TERMINALS=true \
+    NO_GAMEPAD=true \
+    DEBIAN_FRONTEND=noninteractive
 
 # keep everything in a single RUN to reduce layers and ensure cleanup happens in the same layer
 RUN set -eux; \
@@ -27,48 +42,6 @@ RUN set -eux; \
 
 COPY /root /
 
-FROM scratch
-
-ARG OA_VERSION
-LABEL maintainer="hypnotoad08"
-ENV TITLE="OpenAudible" \
-    PATH="/lsiopy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-    HOME=/config \
-    LANGUAGE=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    TERM=xterm \
-    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
-    S6_VERBOSITY=1 \
-    S6_STAGE2_HOOK=/docker-mods \
-    VIRTUAL_ENV=/lsiopy \
-    DISPLAY=:1 \
-    PERL5LIB=/usr/local/bin \
-    START_DOCKER=true \
-    PULSE_RUNTIME_PATH=/defaults \
-    SELKIES_INTERPOSER=/usr/lib/selkies_joystick_interposer.so \
-    NVIDIA_DRIVER_CAPABILITIES=all \
-    DISABLE_ZINK=false \
-    DISABLE_DRI3=false \
-    OA_VERSION="${OA_VERSION}" \
-    SELKIES_ENCODER=jpeg \
-    SELKIES_USE_CSS_SCALING=true \
-    SELKIES_UI_SIDEBAR_SHOW_APPS=false \
-    SELKIES_UI_SIDEBAR_SHOW_FILES=false \
-    SELKIES_UI_SIDEBAR_SHOW_SHARING=false \
-    SELKIES_UI_SIDEBAR_SHOW_GAMEPADS=false \
-    SELKIES_ENABLE_SHARING=false \
-    SELKIES_GAMEPAD_ENABLED=false \
-    SELKIES_MICROPHONE_ENABLED=false \
-    SELKIES_COMMAND_ENABLED=false \
-    SELKIES_FILE_TRANSFERS= \
-    DISABLE_TERMINALS=true \
-    NO_GAMEPAD=true \
-    DEBIAN_FRONTEND=noninteractive
-
-COPY --from=runtime / /
-
 EXPOSE 3000
 
 VOLUME /config
-WORKDIR /
-ENTRYPOINT ["/init"]
