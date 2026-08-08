@@ -1,2 +1,2 @@
 #!/bin/bash
-OpenAudible
+exec OpenAudible

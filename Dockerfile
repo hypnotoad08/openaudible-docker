@@ -4,6 +4,7 @@ LABEL maintainer="hypnotoad08"
 ARG OA_VERSION=4.8.7
 ENV TITLE="OpenAudible" \
     OA_VERSION="${OA_VERSION}" \
+    SELKIES_ENCODER=jpeg \
     DEBIAN_FRONTEND=noninteractive
 
 # keep everything in a single RUN to reduce layers and ensure cleanup happens in the same layer
