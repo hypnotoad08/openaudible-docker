@@ -1,7 +1,7 @@
 FROM ghcr.io/linuxserver/baseimage-selkies:debiantrixie
 
 LABEL maintainer="hypnotoad08"
-ARG OA_VERSION=5.0.2
+ARG OA_VERSION=5.0.3
 ENV TITLE="OpenAudible" \
     OA_VERSION="${OA_VERSION}" \
     SELKIES_ENCODER=jpeg \
